@@ -26,7 +26,7 @@
 
     <files>
         <file>
-            <source>src/main/resources/smschecker.sh</source>
+            <source>src/main/resources/smsserver.sh</source>
             <outputDirectory>/</outputDirectory>
         </file>
     </files>

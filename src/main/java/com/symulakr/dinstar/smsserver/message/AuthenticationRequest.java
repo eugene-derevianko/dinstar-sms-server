@@ -5,14 +5,14 @@ import java.util.Arrays;
 public class AuthenticationRequest extends AbstractMessage
 {
 
+   public static final int TYPE = 0x0F;
+
    private String userId;
    private String password;
 
-   private byte[] body;
-
-   public AuthenticationRequest(MessageId messageId)
+   public AuthenticationRequest(Head head)
    {
-      super(messageId);
+      super(head);
    }
 
    public String getUserId()
@@ -25,23 +25,17 @@ public class AuthenticationRequest extends AbstractMessage
       return password;
    }
 
-   public void setBody(byte[] body)
+   @Override
+   protected void parseBody()
    {
-      this.body = body;
       this.userId = new String(Arrays.copyOfRange(body, 0, 16));
       this.password = new String(Arrays.copyOfRange(body, 16, 32));
    }
 
    @Override
-   public byte[] getBody()
-   {
-      return body;
-   }
-
-   @Override
    public int getType()
    {
-      return 0x0F;
+      return TYPE;
    }
 
 }

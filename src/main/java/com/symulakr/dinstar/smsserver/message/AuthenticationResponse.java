@@ -3,14 +3,16 @@ package com.symulakr.dinstar.smsserver.message;
 public class AuthenticationResponse extends SimpleResponse
 {
 
-   public AuthenticationResponse(MessageId messageId, boolean isSucceed)
+   public static final int TYPE = 0x10;
+
+   public AuthenticationResponse(Head head, boolean isSucceed)
    {
-      super(messageId, isSucceed);
+      super(head, isSucceed);
    }
 
    @Override
    public int getType()
    {
-      return 0x10;
+      return TYPE;
    }
 }

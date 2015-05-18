@@ -10,7 +10,7 @@ public class Head
 
    private int length;
    private MessageId messageId;
-   private MessageType messageType;
+   private int messageType;
    private byte[] flag = new byte[2];
 
    public Head(byte[] bytes)
@@ -19,16 +19,9 @@ public class Head
       this.length = ByteBuffer.wrap(Arrays.copyOf(bytes, 4))
             .getInt();
       this.messageId = new MessageId(Arrays.copyOfRange(bytes, 4, 20));
-      this.messageType = MessageTypeFactory.getMessageType(ByteBuffer.wrap(Arrays.copyOfRange(bytes, 20, 22))
-            .getShort());
+      this.messageType = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 20, 22))
+            .getShort();
       this.flag = Arrays.copyOfRange(bytes, 22, 24);
-   }
-
-   public Head(int length, MessageId messageId, MessageType messageType)
-   {
-      this.length = length;
-      this.messageId = messageId;
-      this.messageType = messageType;
    }
 
    public byte[] getBytes()
@@ -46,7 +39,7 @@ public class Head
       return messageId;
    }
 
-   public MessageType getMessageType()
+   public int getMessageType()
    {
       return messageType;
    }

@@ -1,5 +1,6 @@
 package com.symulakr.dinstar.smsserver.message;
 
+@Deprecated
 public enum MessageType
 {
      X00 (0x00, "Keepalive message", Direction.ANY),

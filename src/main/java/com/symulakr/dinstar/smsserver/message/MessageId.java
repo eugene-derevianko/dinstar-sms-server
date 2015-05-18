@@ -23,7 +23,6 @@ public class MessageId
    public byte[] toBytes()
    {
       return bytes;
-
    }
 
    public String getMacAddress()
@@ -65,4 +64,13 @@ public class MessageId
       return ByteBuffer.wrap(Arrays.copyOfRange(bytes, 12, 16))
             .getInt();
    }
+
+   @Override
+   public String toString() {
+      return "Message Id:\n" +
+              "\tMAC address: " + macAddress   +
+              "\tTime: " + messageTime +
+              "\tSerial number: " + serialNo;
+   }
+
 }

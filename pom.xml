@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.symulakr.dinstar</groupId>
-    <artifactId>smsservice</artifactId>
+    <artifactId>smsserver</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>SmsServer</name>
     <packaging>jar</packaging>
