@@ -1,7 +1,7 @@
 #! /bin/sh
 
-NAME="smschecker"
-DESC="SmsChecker service"
+NAME="smsserver"
+DESC="SmsServer service"
 
 # The path to Jsvc
 EXEC="/usr/bin/jsvc"
@@ -13,10 +13,10 @@ FILE_PATH="/usr/local/$NAME"
 JAVA_HOME="/usr/lib/jvm/default-java"
 
 # Our classpath including our jar file and the Apache Commons Daemon library
-CLASS_PATH="$FILE_PATH/SmsChecker.jar"
+CLASS_PATH="$FILE_PATH/SmsServer.jar"
 
 # The fully qualified name of the class to execute
-CLASS="com.symulakr.dinstar.sms.Application"
+CLASS="com.symulakr.dinstar.smsserver.Application"
 
 # Any command line arguments to be passed to the our Java Daemon implementations init() method
 ARGS="myArg1 myArg2 myArg3"

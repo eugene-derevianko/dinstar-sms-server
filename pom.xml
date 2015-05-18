@@ -7,7 +7,7 @@
     <groupId>com.symulakr.dinstar</groupId>
     <artifactId>smsservice</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>SmsChecker</name>
+    <name>SmsServer</name>
     <packaging>jar</packaging>
 
     <properties>
@@ -38,7 +38,7 @@
                     <attach>false</attach>
                     <archive>
                         <manifest>
-                            <mainClass>com.symulakr.dinstar.sms.Application</mainClass>
+                            <mainClass>com.symulakr.dinstar.smsserver.Application</mainClass>
                         </manifest>
                     </archive>
                     <descriptors>
