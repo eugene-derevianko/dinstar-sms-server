@@ -1,22 +1,17 @@
 package com.symulakr.dinstar.smsserver.message;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
+
+import com.symulakr.dinstar.smsserver.utils.ArrayUtils;
+import com.symulakr.dinstar.smsserver.utils.HeadParser;
 
 public abstract class AbstractMessage implements Message
 {
 
-   private Head head;
+   protected byte[] head;
    protected byte[] body;
 
-   public AbstractMessage(Head head)
-   {
-      this.head = head;
-   }
-
-   public Head getHead()
+   public byte[] getHead()
    {
       return head;
    }
@@ -26,61 +21,46 @@ public abstract class AbstractMessage implements Message
       return body;
    }
 
-   public void readBody(BufferedInputStream stream) throws IOException
-   {
-      while (stream.available() < getLength())
-      {
+   public abstract int getLength();
 
-      }
-      this.body = new byte[getLength()];
-      stream.read(this.body);
-      parseBody();
-   }
+   public abstract short getType();
 
-   protected abstract void parseBody();
-
-   public byte[] getId()
-   {
-      return getMessageId().toBytes();
-   }
-
-   public MessageId getMessageId()
-   {
-      return getHead().getMessageId();
-   }
-
-   public byte[] getFlag()
-   {
-      return getHead().getFlag();
-   }
-
-   public int getLength()
-   {
-      return getHead().getLength();
-   }
-
-   public abstract int getType();
+   public abstract byte[] getFlag();
 
    public byte[] toBytes()
    {
-      return ByteBuffer.allocate(24 + getLength())
-            .putInt(getLength())
-            .put(getId())
-            .putShort((short) getType())
-            .put(getFlag())
-            .put(getBody())
+      return ByteBuffer.allocate(head.length + body.length)
+            .put(head)
+            .put(body)
             .array();
    }
 
    @Override
    public String toString()
    {
-      return "Message:\n" +
-            "Length: " + getLength() +
-            "\n" + getMessageId() +
-            "Type: " + getType() +
-            ", flag=" + Arrays.toString(getFlag()) +
-            ", body=" + Arrays.toString(body);
+      return new StringBuilder("\n-----------------------------------------------")
+            .append("\nHead:")
+            .append("\n-----------------------------------------------\n")
+            .append(ArrayUtils.toString(head))
+            .append("\n-----------------------------------------------")
+            .append("\n\tLength: ")
+            .append(getLength())
+            .append("\n\tMessage Id:")
+            .append("\n\t\tMAC address: ")
+            .append(HeadParser.getMacAddress(head))
+            .append("\n\t\tTime: ")
+            .append(HeadParser.getMessageTime(head))
+            .append("\n\t\tSerial number: ")
+            .append(HeadParser.getSerialNumber(head))
+            .append("\n\tType: ")
+            .append(String.format("%04x", getType()))
+            .append("\n\tFlag: ")
+            .append(ArrayUtils.toString(getFlag()))
+            .append("\nBody:")
+            .append("\n-----------------------------------------------\n")
+            .append(ArrayUtils.toString(body))
+            .append("\n-----------------------------------------------")
+            .toString();
    }
 
 }

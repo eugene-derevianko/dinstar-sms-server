@@ -1,15 +1,11 @@
 package com.symulakr.dinstar.smsserver.message;
 
-public abstract class SimpleResponse extends AbstractMessage
+public abstract class SimpleResponse extends OutgoingMessage
 {
 
    public static final int BODY_LENGTH = 1;
 
-   @Override
-   protected void parseBody()
-   {
-
-   }
+   private boolean succeed;
 
    @Override
    public int getLength()
@@ -17,11 +13,18 @@ public abstract class SimpleResponse extends AbstractMessage
       return BODY_LENGTH;
    }
 
-   public SimpleResponse(Head head, boolean isSucceed)
+   @Override
+   protected void createBody()
    {
-      super(head);
       body = new byte[getLength()];
-      body[0] = (byte) (isSucceed ? 0 : 1);
+      body[0] = (byte) (succeed ? 0 : 1);
+   }
+
+   public SimpleResponse(byte[] messageId, boolean succeed)
+   {
+      this.succeed = succeed;
+      createHead(messageId);
+      createBody();
    }
 
 }

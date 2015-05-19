@@ -66,11 +66,15 @@ public class MessageId
    }
 
    @Override
-   public String toString() {
-      return "Message Id:\n" +
-              "\tMAC address: " + macAddress   +
-              "\tTime: " + messageTime +
-              "\tSerial number: " + serialNo;
+   public final String toString()
+   {
+      return new StringBuilder().append("MAC address: ")
+            .append(macAddress)
+            .append("\nTime: ")
+            .append(messageTime)
+            .append("\nSerial number: ")
+            .append(serialNo)
+            .toString();
    }
 
 }

@@ -1,12 +1,15 @@
 package com.symulakr.dinstar.smsserver;
 
-import com.symulakr.dinstar.smsserver.message.*;
-
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import com.symulakr.dinstar.smsserver.message.IncomingMessage;
+import com.symulakr.dinstar.smsserver.message.MessageFactory;
+import com.symulakr.dinstar.smsserver.message.OutgoingMessage;
+import com.symulakr.dinstar.smsserver.utils.Logger;
 
 public class SmsServer extends Thread
 {
@@ -30,10 +33,8 @@ public class SmsServer extends Thread
    @Override
    public void run()
    {
-
       try
       {
-
          Socket connectionSocket = welcomeSocket.accept();
          MessageFactory messageFactory = new MessageFactory();
          System.out.println("Accept");
@@ -41,57 +42,24 @@ public class SmsServer extends Thread
 
          while (!application.isStopped())
          {
-
-            AbstractMessage message = messageFactory.getMessage(stream);
-            print(message);
-            if (message instanceof AuthenticationRequest)
+            IncomingMessage message = messageFactory.getMessage(stream);
+            Logger.sout(message);
+            OutgoingMessage outgoingMessage = message.createResponse();
+            if (outgoingMessage != null)
             {
-
-               System.out.println("UserId:'" + ((AuthenticationRequest) message).getUserId() + "'");
-               System.out.println("Password:'" + ((AuthenticationRequest) message).getPassword() + "'");
-
-               AuthenticationResponse authenticationResponse = new AuthenticationResponse(message.getHead(), true);
-               System.out.println("Response Message: ");
-               System.out.println(authenticationResponse);
-               print(authenticationResponse);
+               Logger.sout(outgoingMessage);
                ByteArrayOutputStream outToClient = new ByteArrayOutputStream();
-               outToClient.write(authenticationResponse.toBytes());
+               outToClient.write(outgoingMessage.toBytes());
                outToClient.writeTo(connectionSocket.getOutputStream());
             }
-
-            System.out.println("---------------------------------------------------------");
-
          }
          connectionSocket.close();
          System.out.println("End");
-
       }
-      catch (IOException ex)
+      catch (InterruptedException | IOException ex)
       {
          System.out.println(ex.toString());
       }
-
-   }
-
-   private void print(Message message)
-   {
-      StringBuilder sb = new StringBuilder();
-      String delimiter = "";
-      byte[] array = message.toBytes();
-      for (int i = 0; i < array.length; i++)
-      {
-         if (i != 0 && i % 16 == 0)
-         {
-            delimiter = "\n";
-         }
-         sb.append(delimiter)
-               .append(String.format("%02x", array[i]));
-         delimiter = " ";
-
-      }
-      sb.append('\n');
-
-      System.out.println(sb);
    }
 
 }

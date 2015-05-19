@@ -3,10 +3,15 @@ package com.symulakr.dinstar.smsserver.message;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
+import com.symulakr.dinstar.smsserver.utils.ArrayUtils;
+
+@Deprecated
 public class Head
 {
 
-   private byte[] bytes = new byte[24];
+   public static final int HEAD_LENGTH = 24;
+
+   private byte[] bytes = new byte[HEAD_LENGTH];
 
    private int length;
    private MessageId messageId;
@@ -48,4 +53,20 @@ public class Head
    {
       return flag;
    }
+
+   @Override
+   public final String toString()
+   {
+      return new StringBuilder().append(ArrayUtils.toString(bytes))
+            .append("\nLength: ")
+            .append(length)
+            .append("\nMessage Id: \n")
+            .append(messageId)
+            .append("\nType: ")
+            .append(String.format("%04x", messageType))
+            .append("\nFlag: ")
+            .append(ArrayUtils.toString(flag))
+            .toString();
+   }
+
 }

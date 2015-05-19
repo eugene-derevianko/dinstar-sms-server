@@ -1,24 +1,23 @@
 package com.symulakr.dinstar.smsserver.message;
 
-public class DefaultMessage extends AbstractMessage
+public class DefaultMessage extends IncomingMessage
 {
 
-   public static final int TYPE = 0xFFFF;
-
-   public DefaultMessage(Head head)
+   public DefaultMessage(byte[] head)
    {
-      super(head);
+      this.head = head;
    }
 
    @Override
    protected void parseBody()
    {
-        //do nothing
+      // do nothing
    }
 
    @Override
-   public int getType()
+   public OutgoingMessage createResponse()
    {
-      return TYPE;
+      return null;
    }
+
 }

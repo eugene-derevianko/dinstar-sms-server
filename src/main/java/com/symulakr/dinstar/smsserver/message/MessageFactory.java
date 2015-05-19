@@ -3,31 +3,39 @@ package com.symulakr.dinstar.smsserver.message;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 
+import com.symulakr.dinstar.smsserver.message.report.CsqRssiReport;
+import com.symulakr.dinstar.smsserver.message.report.StatusReport;
+import com.symulakr.dinstar.smsserver.message.service.AuthenticationRequest;
+import com.symulakr.dinstar.smsserver.message.sms.IncomingGsmMessage;
+import com.symulakr.dinstar.smsserver.utils.HeadParser;
+
 public class MessageFactory
 {
 
-   public static final int HEAD_LENGTH = 24;
-
-   public AbstractMessage getMessage(BufferedInputStream stream) throws IOException
+   public IncomingMessage getMessage(BufferedInputStream stream) throws IOException, InterruptedException
    {
-      while (stream.available() < HEAD_LENGTH)
+      while (stream.available() < HeadParser.HEAD_LENGTH)
       {
-
+         Thread.sleep(1000);
       }
-      System.out.println("Message Head: ");
-      byte[] messageHead = new byte[HEAD_LENGTH];
-      stream.read(messageHead);
-      Head head = new Head(messageHead);
-      AbstractMessage message = createMessage(head);
+      byte[] head = new byte[HeadParser.HEAD_LENGTH];
+      stream.read(head);
+      com.symulakr.dinstar.smsserver.message.IncomingMessage message = createMessage(head);
       message.readBody(stream);
       return message;
    }
 
-   private AbstractMessage createMessage(Head head)
+   private com.symulakr.dinstar.smsserver.message.IncomingMessage createMessage(byte[] head)
    {
-      switch (head.getMessageType())
+      switch (HeadParser.getMessageType(head))
       {
-         case AuthenticationRequest.TYPE:
+         case X05:
+            return new IncomingGsmMessage(head);
+         case X07:
+            return new StatusReport(head);
+         case X0D:
+            return new CsqRssiReport(head);
+         case X0F:
             return new AuthenticationRequest(head);
          default:
             return new DefaultMessage(head);
