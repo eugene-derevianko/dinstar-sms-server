@@ -1,4 +1,4 @@
-package com.symulakr.dinstar.smsserver.message;
+package com.symulakr.dinstar.smsserver.message.enums;
 
 public enum IncomingMessageType implements MessageType
 {

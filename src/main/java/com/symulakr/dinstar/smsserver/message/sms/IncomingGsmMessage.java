@@ -1,5 +1,6 @@
 package com.symulakr.dinstar.smsserver.message.sms;
 
+import static com.symulakr.dinstar.smsserver.utils.ArrayUtils.skip0x00;
 import static com.symulakr.dinstar.smsserver.utils.EnumUtils.fromByte;
 
 import java.nio.ByteBuffer;
@@ -31,12 +32,12 @@ public class IncomingGsmMessage extends IncomingMessage
       ByteBuffer buffer = ByteBuffer.wrap(body);
       byte[] numberBytes = new byte[24];
       buffer.get(numberBytes);
-      number = new String(numberBytes);
+      number = new String(skip0x00(numberBytes));
       contentType = fromByte(buffer.get(), ContentType.values());
       port = buffer.get();
       byte[] time = new byte[15];
       buffer.get(time);
-      timestamp = new String(time);
+      timestamp = new String(skip0x00(time));
       timeZone = buffer.get();
       encoding = fromByte(buffer.get(), Encoding.values());
       contentLength = buffer.getShort();

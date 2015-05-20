@@ -1,9 +1,11 @@
 package com.symulakr.dinstar.smsserver.message.service;
 
-import com.symulakr.dinstar.smsserver.message.IncomingMessage;
-import com.symulakr.dinstar.smsserver.message.OutgoingMessage;
+import static com.symulakr.dinstar.smsserver.utils.ArrayUtils.skip0x00;
 
 import java.util.Arrays;
+
+import com.symulakr.dinstar.smsserver.message.IncomingMessage;
+import com.symulakr.dinstar.smsserver.message.OutgoingMessage;
 
 public class AuthenticationRequest extends IncomingMessage
 {
@@ -29,8 +31,8 @@ public class AuthenticationRequest extends IncomingMessage
    @Override
    protected void parseBody()
    {
-      this.userId = new String(Arrays.copyOfRange(body, 0, 16));
-      this.password = new String(Arrays.copyOfRange(body, 16, 32));
+      this.userId = new String(skip0x00(Arrays.copyOfRange(body, 0, 16)));
+      this.password = new String(skip0x00(Arrays.copyOfRange(body, 16, 32)));
    }
 
    @Override

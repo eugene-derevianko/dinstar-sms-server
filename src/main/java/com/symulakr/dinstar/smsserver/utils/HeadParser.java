@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Date;
 
-import com.symulakr.dinstar.smsserver.message.IncomingMessageType;
+import com.symulakr.dinstar.smsserver.message.enums.IncomingMessageType;
 
 public abstract class HeadParser
 {

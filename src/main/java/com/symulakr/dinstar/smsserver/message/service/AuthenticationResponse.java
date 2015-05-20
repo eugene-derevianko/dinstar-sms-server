@@ -1,6 +1,6 @@
 package com.symulakr.dinstar.smsserver.message.service;
 
-import com.symulakr.dinstar.smsserver.message.OutgoingMessageType;
+import com.symulakr.dinstar.smsserver.message.enums.OutgoingMessageType;
 import com.symulakr.dinstar.smsserver.message.SimpleResponse;
 
 public class AuthenticationResponse extends SimpleResponse

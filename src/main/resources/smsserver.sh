@@ -22,7 +22,7 @@ CLASS="com.symulakr.dinstar.smsserver.Application"
 ARGS="myArg1 myArg2 myArg3"
 
 #The user to run the daemon as
-USER="eugene"
+USER="smsserver"
 
 # The file that will contain our process identification number (pid) for other scripts/programs that need to access it.
 PID="/var/run/$NAME.pid"

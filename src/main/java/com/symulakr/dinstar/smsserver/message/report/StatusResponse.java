@@ -1,6 +1,6 @@
 package com.symulakr.dinstar.smsserver.message.report;
 
-import com.symulakr.dinstar.smsserver.message.OutgoingMessageType;
+import com.symulakr.dinstar.smsserver.message.enums.OutgoingMessageType;
 import com.symulakr.dinstar.smsserver.message.SimpleResponse;
 
 public class StatusResponse extends SimpleResponse

@@ -1,6 +1,6 @@
 package com.symulakr.dinstar.smsserver.message.sms;
 
-import com.symulakr.dinstar.smsserver.message.OutgoingMessageType;
+import com.symulakr.dinstar.smsserver.message.enums.OutgoingMessageType;
 import com.symulakr.dinstar.smsserver.message.SimpleResponse;
 
 public class IncomingGsmMessageResponse extends SimpleResponse
