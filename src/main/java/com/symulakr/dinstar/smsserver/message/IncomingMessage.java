@@ -1,8 +1,5 @@
 package com.symulakr.dinstar.smsserver.message;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-
 import com.symulakr.dinstar.smsserver.utils.HeadParser;
 
 public abstract class IncomingMessage extends AbstractMessage
@@ -33,14 +30,9 @@ public abstract class IncomingMessage extends AbstractMessage
       return HeadParser.getFlag(head);
    }
 
-   public void readBody(BufferedInputStream stream) throws IOException
+   public void setBody(byte[] body)
    {
-      while (stream.available() < getLength())
-      {
-
-      }
-      this.body = new byte[getLength()];
-      stream.read(this.body);
+      this.body = body;
       parseBody();
    }
 

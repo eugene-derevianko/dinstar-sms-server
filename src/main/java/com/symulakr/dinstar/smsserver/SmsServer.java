@@ -9,6 +9,7 @@ import java.net.Socket;
 import com.symulakr.dinstar.smsserver.message.IncomingMessage;
 import com.symulakr.dinstar.smsserver.message.MessageFactory;
 import com.symulakr.dinstar.smsserver.message.OutgoingMessage;
+import com.symulakr.dinstar.smsserver.utils.HeadParser;
 import com.symulakr.dinstar.smsserver.utils.Logger;
 
 public class SmsServer extends Thread
@@ -39,24 +40,35 @@ public class SmsServer extends Thread
          MessageFactory messageFactory = new MessageFactory();
          System.out.println("Accept");
          BufferedInputStream stream = new BufferedInputStream(connectionSocket.getInputStream());
+         byte[] head = new byte[HeadParser.HEAD_LENGTH];
 
          while (!application.isStopped())
          {
-            IncomingMessage message = messageFactory.getMessage(stream);
-            Logger.sout(message);
-            OutgoingMessage outgoingMessage = message.createResponse();
-            if (outgoingMessage != null)
+            if (stream.read(head) == HeadParser.HEAD_LENGTH)
             {
-               Logger.sout(outgoingMessage);
-               ByteArrayOutputStream outToClient = new ByteArrayOutputStream();
-               outToClient.write(outgoingMessage.toBytes());
-               outToClient.writeTo(connectionSocket.getOutputStream());
+               IncomingMessage message = messageFactory.createMessage(head);
+               byte[] body = new byte[message.getLength()];
+               if (stream.read(body) == message.getLength())
+               {
+                  message.setBody(body);
+               }
+
+               Logger.sout(message);
+
+               OutgoingMessage outgoingMessage = message.createResponse();
+               if (outgoingMessage != null)
+               {
+                  Logger.sout(outgoingMessage);
+                  ByteArrayOutputStream outToClient = new ByteArrayOutputStream();
+                  outToClient.write(outgoingMessage.toBytes());
+                  outToClient.writeTo(connectionSocket.getOutputStream());
+               }
             }
          }
          connectionSocket.close();
          System.out.println("End");
       }
-      catch (InterruptedException | IOException ex)
+      catch (IOException ex)
       {
          System.out.println(ex.toString());
       }
