@@ -1,18 +1,22 @@
 package com.symulakr.dinstar.smsserver.message.sms;
 
-import com.symulakr.dinstar.smsserver.message.IncomingMessage;
-import com.symulakr.dinstar.smsserver.message.OutgoingMessage;
+import static com.symulakr.dinstar.smsserver.utils.EnumUtils.fromByte;
 
 import java.nio.ByteBuffer;
+
+import com.symulakr.dinstar.smsserver.message.IncomingMessage;
+import com.symulakr.dinstar.smsserver.message.OutgoingMessage;
+import com.symulakr.dinstar.smsserver.message.enums.ContentType;
+import com.symulakr.dinstar.smsserver.message.enums.Encoding;
 
 public class IncomingGsmMessage extends IncomingMessage
 {
    private String number;
-   private byte contentType;
+   private ContentType contentType;
    private byte port;
    private String timestamp;
    private byte timeZone;
-   private byte encoding;
+   private Encoding encoding;
    private short contentLength;
    private String content;
 
@@ -28,17 +32,17 @@ public class IncomingGsmMessage extends IncomingMessage
       byte[] numberBytes = new byte[24];
       buffer.get(numberBytes);
       number = new String(numberBytes);
-      contentType = buffer.get();
+      contentType = fromByte(buffer.get(), ContentType.values());
       port = buffer.get();
       byte[] time = new byte[15];
       buffer.get(time);
       timestamp = new String(time);
       timeZone = buffer.get();
-      encoding = buffer.get();
+      encoding = fromByte(buffer.get(), Encoding.values());
       contentLength = buffer.getShort();
       byte[] contentBytes = new byte[contentLength];
       buffer.get(contentBytes);
-      content = new String(contentBytes);
+      content = new String(contentBytes, encoding.getCharset());
    }
 
    @Override
@@ -54,9 +58,11 @@ public class IncomingGsmMessage extends IncomingMessage
             .append("\n\tNumber: ")
             .append(number)
             .append("\n\tMessage Type: ")
-            .append(contentType == 0 ? ContentType.SMS : ContentType.MMS)
+            .append(contentType)
             .append("\n\ttimestamp: ")
             .append(timestamp)
+            .append("\n\tEncoding: ")
+            .append(encoding)
             .append("\n\tMessage length: ")
             .append(contentLength)
             .append("\n\tMessage: ")
@@ -69,7 +75,7 @@ public class IncomingGsmMessage extends IncomingMessage
       return number;
    }
 
-   public byte getContentType()
+   public ContentType getContentType()
    {
       return contentType;
    }
@@ -89,7 +95,7 @@ public class IncomingGsmMessage extends IncomingMessage
       return timeZone;
    }
 
-   public byte getEncoding()
+   public Encoding getEncoding()
    {
       return encoding;
    }
@@ -104,9 +110,4 @@ public class IncomingGsmMessage extends IncomingMessage
       return content;
    }
 
-   enum ContentType
-   {
-      SMS,
-      MMS
-   }
 }
