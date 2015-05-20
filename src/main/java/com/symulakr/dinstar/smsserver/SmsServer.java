@@ -15,20 +15,11 @@ import com.symulakr.dinstar.smsserver.utils.Logger;
 public class SmsServer extends Thread
 {
 
-   private Application application;
    private ServerSocket welcomeSocket;
 
-   public SmsServer(Application application) throws IOException
+   public SmsServer() throws IOException
    {
-      this.application = application;
       this.welcomeSocket = new ServerSocket(6789);
-   }
-
-   @Override
-   public synchronized void start()
-   {
-      application.setStopped(false);
-      super.start();
    }
 
    @Override
@@ -42,7 +33,7 @@ public class SmsServer extends Thread
          BufferedInputStream stream = new BufferedInputStream(connectionSocket.getInputStream());
          byte[] head = new byte[HeadParser.HEAD_LENGTH];
 
-         while (!application.isStopped())
+         while (true)
          {
             if (stream.read(head) == HeadParser.HEAD_LENGTH)
             {
@@ -65,8 +56,8 @@ public class SmsServer extends Thread
                }
             }
          }
-         connectionSocket.close();
-         System.out.println("End");
+//         connectionSocket.close();
+//         System.out.println("End");
       }
       catch (IOException ex)
       {
