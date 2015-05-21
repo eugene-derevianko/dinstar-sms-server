@@ -11,15 +11,24 @@ import com.symulakr.dinstar.smsserver.message.MessageFactory;
 import com.symulakr.dinstar.smsserver.message.OutgoingMessage;
 import com.symulakr.dinstar.smsserver.utils.HeadParser;
 import com.symulakr.dinstar.smsserver.utils.Logger;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PreDestroy;
+
+@Component
 public class SmsServer extends Thread
 {
 
    private ServerSocket welcomeSocket;
+   private Socket connectionSocket;
+
+   @Value("${sms.server.port}")
+   private int port;
 
    public SmsServer() throws IOException
    {
-      this.welcomeSocket = new ServerSocket(6789);
+      this.welcomeSocket = new ServerSocket(port);
    }
 
    @Override
@@ -27,7 +36,7 @@ public class SmsServer extends Thread
    {
       try
       {
-         Socket connectionSocket = welcomeSocket.accept();
+         connectionSocket = welcomeSocket.accept();
          MessageFactory messageFactory = new MessageFactory();
          System.out.println("Accept");
          BufferedInputStream stream = new BufferedInputStream(connectionSocket.getInputStream());
@@ -56,12 +65,21 @@ public class SmsServer extends Thread
                }
             }
          }
-//         connectionSocket.close();
-//         System.out.println("End");
       }
       catch (IOException ex)
       {
          System.out.println(ex.toString());
+      }
+
+   }
+
+   @PreDestroy
+   public void onStop() throws IOException
+   {
+      System.out.println("End");
+      if (connectionSocket != null)
+      {
+         connectionSocket.close();
       }
    }
 
