@@ -6,16 +6,18 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import com.symulakr.dinstar.smsserver.message.IncomingMessage;
-import com.symulakr.dinstar.smsserver.message.MessageFactory;
-import com.symulakr.dinstar.smsserver.message.OutgoingMessage;
-import com.symulakr.dinstar.smsserver.utils.HeadParser;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PreDestroy;
+import com.symulakr.dinstar.smsserver.message.IncomingMessage;
+import com.symulakr.dinstar.smsserver.message.MessageFactory;
+import com.symulakr.dinstar.smsserver.message.OutgoingMessage;
+import com.symulakr.dinstar.smsserver.utils.HeadParser;
 
 @Component
 public class SmsServer extends Thread
@@ -23,29 +25,24 @@ public class SmsServer extends Thread
 
    private final static Logger LOG = LogManager.getLogger(SmsServer.class);
 
-   private ServerSocket welcomeSocket;
-   private Socket connectionSocket;
-
    @Value("${sms.server.port}")
    private int port;
 
-   public SmsServer() throws IOException
-   {
-      this.welcomeSocket = new ServerSocket(port);
-   }
+   private boolean started = false;
 
    @Override
    public void run()
    {
       try
       {
-         connectionSocket = welcomeSocket.accept();
+         ServerSocket welcomeSocket = new ServerSocket(port);
+         Socket connectionSocket = welcomeSocket.accept();
          MessageFactory messageFactory = new MessageFactory();
          LOG.info("Accept");
          BufferedInputStream stream = new BufferedInputStream(connectionSocket.getInputStream());
          byte[] head = new byte[HeadParser.HEAD_LENGTH];
 
-         while (true)
+         while (started)
          {
             if (stream.read(head) == HeadParser.HEAD_LENGTH)
             {
@@ -68,6 +65,7 @@ public class SmsServer extends Thread
                }
             }
          }
+         connectionSocket.close();
       }
       catch (IOException ex)
       {
@@ -79,11 +77,15 @@ public class SmsServer extends Thread
    @PreDestroy
    public void onStop() throws IOException
    {
-      LOG.info("End");
-      if (connectionSocket != null)
-      {
-         connectionSocket.close();
-      }
+      started = false;
+      LOG.info("PreDestroy");
+   }
+
+   @PostConstruct
+   public void onStart()
+   {
+      started = true;
+      start();
    }
 
 }

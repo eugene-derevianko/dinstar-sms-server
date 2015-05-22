@@ -5,13 +5,16 @@
         <Property name="LOG_PATTERN">[%d{yyyy-MM-dd HH:mm:ss.SSS}] log4j2%X{context} - ${sys:PID} %5p [%t] --- %c{1}: %m%n</Property>
     </Properties>
     <Appenders>
-        <Console name="Console" target="SYSTEM_OUT" follow="true">
+        <File name="File" fileName="logs/app.log">
             <PatternLayout pattern="${LOG_PATTERN}"/>
-        </Console>
+        </File>
+        <Async name="Async">
+            <AppenderRef ref="File"/>
+        </Async>
     </Appenders>
     <Loggers>
         <Root level="info">
-            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
         </Root>
     </Loggers>
 </Configuration>
