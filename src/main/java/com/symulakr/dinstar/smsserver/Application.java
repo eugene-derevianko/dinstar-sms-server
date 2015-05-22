@@ -1,54 +1,19 @@
 package com.symulakr.dinstar.smsserver;
 
-import org.apache.commons.daemon.Daemon;
-import org.apache.commons.daemon.DaemonContext;
-import org.apache.commons.daemon.DaemonInitException;
+import java.io.IOException;
 
-public class Application implements Daemon
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
+
+@SpringBootApplication
+public class Application
 {
 
-   private SmsServer smsServer;
-   private boolean stopped = false;
-
-   public void init(DaemonContext daemonContext) throws DaemonInitException, Exception
+   public static void main(String[] args) throws IOException
    {
-      String[] args = daemonContext.getArguments();
-
-      //todo add application context, get smsServer from one.
-      smsServer = new SmsServer(this);
+      ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
    }
 
-   public void start() throws Exception
-   {
-      smsServer.start();
-   }
-
-   public void stop() throws Exception
-   {
-      stopped = true;
-      try
-      {
-         smsServer.join(1000);
-      }
-      catch (InterruptedException e)
-      {
-         System.err.println(e.getMessage());
-         throw e;
-      }
-   }
-
-   public boolean isStopped()
-   {
-      return stopped;
-   }
-
-   public void setStopped(boolean stopped)
-   {
-      this.stopped = stopped;
-   }
-
-   public void destroy()
-   {
-      smsServer = null;
-   }
 }
+

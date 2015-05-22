@@ -6,43 +6,43 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import com.symulakr.dinstar.smsserver.message.IncomingMessage;
 import com.symulakr.dinstar.smsserver.message.MessageFactory;
 import com.symulakr.dinstar.smsserver.message.OutgoingMessage;
 import com.symulakr.dinstar.smsserver.utils.HeadParser;
-import com.symulakr.dinstar.smsserver.utils.Logger;
 
+@Component
 public class SmsServer extends Thread
 {
 
-   private Application application;
-   private ServerSocket welcomeSocket;
+   private final static Logger LOG = LogManager.getLogger(SmsServer.class);
 
-   public SmsServer(Application application) throws IOException
-   {
-      this.application = application;
-      this.welcomeSocket = new ServerSocket(6789);
-   }
+   @Value("${sms.server.port}")
+   private int port;
 
-   @Override
-   public synchronized void start()
-   {
-      application.setStopped(false);
-      super.start();
-   }
+   private boolean started = false;
 
    @Override
    public void run()
    {
       try
       {
+         ServerSocket welcomeSocket = new ServerSocket(port);
          Socket connectionSocket = welcomeSocket.accept();
          MessageFactory messageFactory = new MessageFactory();
-         System.out.println("Accept");
+         LOG.info("Accept");
          BufferedInputStream stream = new BufferedInputStream(connectionSocket.getInputStream());
          byte[] head = new byte[HeadParser.HEAD_LENGTH];
 
-         while (!application.isStopped())
+         while (started)
          {
             if (stream.read(head) == HeadParser.HEAD_LENGTH)
             {
@@ -53,12 +53,12 @@ public class SmsServer extends Thread
                   message.setBody(body);
                }
 
-               Logger.sout(message);
+               LOG.info(message);
 
                OutgoingMessage outgoingMessage = message.createResponse();
                if (outgoingMessage != null)
                {
-                  Logger.sout(outgoingMessage);
+                  LOG.info(outgoingMessage);
                   ByteArrayOutputStream outToClient = new ByteArrayOutputStream();
                   outToClient.write(outgoingMessage.toBytes());
                   outToClient.writeTo(connectionSocket.getOutputStream());
@@ -66,12 +66,26 @@ public class SmsServer extends Thread
             }
          }
          connectionSocket.close();
-         System.out.println("End");
       }
       catch (IOException ex)
       {
-         System.out.println(ex.toString());
+         LOG.error(ex);
       }
+
+   }
+
+   @PreDestroy
+   public void onStop() throws IOException
+   {
+      started = false;
+      LOG.info("PreDestroy");
+   }
+
+   @PostConstruct
+   public void onStart()
+   {
+      started = true;
+      start();
    }
 
 }
