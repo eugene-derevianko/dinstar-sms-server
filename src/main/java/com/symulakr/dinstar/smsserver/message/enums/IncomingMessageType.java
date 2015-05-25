@@ -7,7 +7,9 @@ public enum IncomingMessageType implements MessageType
    // ...
    X05(0x05, "Receive SMS Message", OutgoingMessageType.X06),
    X07(0x07, "Status Report", OutgoingMessageType.X08),
-   // ...
+   X0A(0x0A, "Response to Send USSD Request", OutgoingMessageType.X09),
+   X0B(0x0B, "Receive USSD Message", OutgoingMessageType.X0C),
+
    X0D(0x0D, "Send Csq Rssi", OutgoingMessageType.X0E),
    X0F(0x0F, "Send userID and Password Authentication", OutgoingMessageType.X10),
    // ...
@@ -17,10 +19,10 @@ public enum IncomingMessageType implements MessageType
    /*
          0x03 Send SMS Result DWG SMS Server
          0x04 Response to Send SMS Result SMS Server DWG
-         0x09 Send USSD Request SMS Server  DWG
-         0x0A Response to Send USSD Request DWG  SMS Server
-         0x0B Receive USSD Message DWG  SMS Server
-         0x0C Response to Receive USSD Message SMS Server  DWG
+        *0x09 Send USSD Request SMS Server  DWG
+        *0x0A Response to Send USSD Request DWG  SMS Server
+        *0x0B Receive USSD Message DWG  SMS Server
+        *0x0C Response to Receive USSD Message SMS Server  DWG
          
          0x11 Receive SMS Receipt DWG SMS Server
          0x12 Response to Receive SMS Receipt SMS Server DWG

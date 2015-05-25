@@ -46,4 +46,9 @@ public abstract class ArrayUtils
       return Arrays.copyOf(temp, index);
    }
 
+   public static byte[] toArray(byte... bytes)
+   {
+      return bytes;
+   }
+
 }

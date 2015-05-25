@@ -2,14 +2,25 @@ package com.symulakr.dinstar.smsserver.message;
 
 import java.nio.ByteBuffer;
 
+import com.symulakr.dinstar.smsserver.common.ToBytes;
 import com.symulakr.dinstar.smsserver.utils.ArrayUtils;
 import com.symulakr.dinstar.smsserver.utils.HeadParser;
 
-public abstract class AbstractMessage implements Message
+public abstract class AbstractMessage implements ToBytes
 {
 
    protected byte[] head;
    protected byte[] body;
+
+//   protected abstract void createHead();
+//
+//   protected abstract void createBody();
+
+//   public AbstractMessage()
+//   {
+//      createHead();
+//      createBody();
+//   }
 
    public byte[] getHead()
    {
