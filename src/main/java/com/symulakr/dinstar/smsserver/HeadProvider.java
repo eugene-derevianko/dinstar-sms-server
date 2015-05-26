@@ -1,34 +1,23 @@
 package com.symulakr.dinstar.smsserver;
 
-import com.symulakr.dinstar.smsserver.message.enums.MessageType;
-import com.symulakr.dinstar.smsserver.utils.HeadParser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.nio.ByteBuffer;
+import com.symulakr.dinstar.smsserver.message.head.Head;
+import com.symulakr.dinstar.smsserver.message.head.MsType;
 
 @Component
 public class HeadProvider
 {
 
    @Autowired
-   private MacAddressProvider macAddressProvider;
-   @Autowired
-   private SerialNumberProvider serialNumberProvider;
+   private MessageIdProvider messageIdProvider;
    @Autowired
    private FlagProvider flagProvider;
 
-   public byte[] provideHeader(byte[]head, int lengthOfBody, MessageType messageType)
+   public Head provideHeader(int lengthOfBody, MsType messageType)
    {
-      return ByteBuffer.allocate(HeadParser.HEAD_LENGTH)
-            .putInt(lengthOfBody)
-            .put(macAddressProvider.getMacAddress())
-            .putShort(messageType.getType())
-            .put(flagProvider.getFlag())
-            .array();
+      return new Head(lengthOfBody, messageIdProvider.provideMessageId(), messageType, flagProvider.provideFlag());
    }
-
-
 
 }

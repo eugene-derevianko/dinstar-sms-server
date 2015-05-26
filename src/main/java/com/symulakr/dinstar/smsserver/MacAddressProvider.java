@@ -3,21 +3,28 @@ package com.symulakr.dinstar.smsserver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.symulakr.dinstar.smsserver.message.head.MacAddress;
+
 @Component
 public class MacAddressProvider
 {
 
    @Value("${sms.server.mac}")
-   private String macAddress;
+   private String macAddressString;
 
-   public static byte getMacAddress()
+   private MacAddress macAddress;
+
+   public MacAddress provideMacAddress()
    {
-      return Byte.parseByte("45");
+      if (macAddress == null)
+      {
+         macAddress = new MacAddress(macAddressString);
+      }
+      return macAddress;
    }
 
-   public static void main(String[] args)
+   public String getMacAddressString()
    {
-      System.out.println(getMacAddress());
+      return macAddressString;
    }
-
 }

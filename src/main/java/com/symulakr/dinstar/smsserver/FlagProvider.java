@@ -1,17 +1,15 @@
 package com.symulakr.dinstar.smsserver;
 
+import com.symulakr.dinstar.smsserver.message.head.Flag;
 import org.springframework.stereotype.Component;
 
 @Component
 public class FlagProvider
 {
 
-   public byte[] getFlag()
+   public Flag provideFlag()
    {
-      return new byte[]
-      {
-            0, 0
-      };
+      return new Flag(new byte[]{0,0});
    }
 
 }

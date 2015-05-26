@@ -1,6 +1,10 @@
 package com.symulakr.dinstar.smsserver.message.enums;
 
-public interface MessageType
+import java.nio.ByteBuffer;
+
+import com.symulakr.dinstar.smsserver.common.ToBytes;
+
+public interface MessageType extends ToBytes
 {
 
    short getType();
@@ -10,6 +14,14 @@ public interface MessageType
    Direction getDirection();
 
    MessageType getCorrespondingType();
+
+   @Override
+   default byte[] toBytes()
+   {
+      return ByteBuffer.allocate(2)
+            .putShort(getType())
+            .array();
+   }
 
    enum Direction
    {
