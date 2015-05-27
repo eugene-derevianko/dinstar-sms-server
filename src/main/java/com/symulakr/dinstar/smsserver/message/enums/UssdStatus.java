@@ -1,4 +1,4 @@
-package com.symulakr.dinstar.smsserver.message.ussd;
+package com.symulakr.dinstar.smsserver.message.enums;
 
 import com.symulakr.dinstar.smsserver.message.enums.AsByte;
 

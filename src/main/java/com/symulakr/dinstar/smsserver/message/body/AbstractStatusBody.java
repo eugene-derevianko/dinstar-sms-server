@@ -1,14 +1,19 @@
-package com.symulakr.dinstar.smsserver.message.report;
+package com.symulakr.dinstar.smsserver.message.body;
 
 import java.util.Arrays;
 
-import com.symulakr.dinstar.smsserver.message.IncomingMessage;
+import com.symulakr.dinstar.smsserver.common.ToBytes;
 
-public abstract class AbstractStatusReport extends IncomingMessage
+public abstract class AbstractStatusBody extends BodyFromDWG
 {
 
    protected int portCount;
    protected byte[] portStatuses;
+
+   public AbstractStatusBody(ToBytes body)
+   {
+      super(body);
+   }
 
    public int getPortCount()
    {
@@ -21,7 +26,7 @@ public abstract class AbstractStatusReport extends IncomingMessage
    }
 
    @Override
-   protected void parseBody()
+   protected void parseByteArray(byte[] body)
    {
       this.portCount = body[0];
       this.portStatuses = Arrays.copyOfRange(body, 1, this.portCount + 1);

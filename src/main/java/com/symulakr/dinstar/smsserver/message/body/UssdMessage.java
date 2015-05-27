@@ -1,14 +1,14 @@
-package com.symulakr.dinstar.smsserver.message.ussd;
+package com.symulakr.dinstar.smsserver.message.body;
 
 import static com.symulakr.dinstar.smsserver.utils.EnumUtils.fromByte;
 
 import java.nio.ByteBuffer;
 
-import com.symulakr.dinstar.smsserver.message.IncomingMessage;
-import com.symulakr.dinstar.smsserver.message.OutgoingMessage;
+import com.symulakr.dinstar.smsserver.common.ToBytes;
 import com.symulakr.dinstar.smsserver.message.enums.Encoding;
+import com.symulakr.dinstar.smsserver.message.enums.UssdStatus;
 
-public class IncomingUssdMessage extends IncomingMessage
+public class UssdMessage extends BodyFromDWG
 {
 
    private byte port;
@@ -17,13 +17,13 @@ public class IncomingUssdMessage extends IncomingMessage
    private short contentLength;
    private String content;
 
-   public IncomingUssdMessage(byte[] head)
+   public UssdMessage(ToBytes body)
    {
-      this.head = head;
+      super(body);
    }
 
    @Override
-   protected void parseBody()
+   protected void parseByteArray(byte[] body)
    {
       ByteBuffer buffer = ByteBuffer.wrap(body);
       port = buffer.get();
@@ -33,12 +33,6 @@ public class IncomingUssdMessage extends IncomingMessage
       byte[] contentBytes = new byte[contentLength];
       buffer.get(contentBytes);
       content = new String(contentBytes, encoding.getCharset());
-   }
-
-   @Override
-   public OutgoingMessage createResponse()
-   {
-      return new IncomingUssdMessageResponse(getMessageId(), true);
    }
 
    @Override

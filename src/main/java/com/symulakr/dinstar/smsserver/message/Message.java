@@ -9,9 +9,9 @@ public class Message implements ToBytes
 {
 
    private Head head;
-   private Body body;
+   private ToBytes body;
 
-   public Message(Head head, Body body)
+   public Message(Head head, ToBytes body)
    {
       this.head = head;
       this.body = body;
@@ -22,7 +22,7 @@ public class Message implements ToBytes
       return head;
    }
 
-   public Body getBody()
+   public ToBytes getBody()
    {
       return body;
    }

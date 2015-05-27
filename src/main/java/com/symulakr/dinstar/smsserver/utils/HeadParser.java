@@ -4,8 +4,6 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Date;
 
-import com.symulakr.dinstar.smsserver.message.enums.IncomingMessageType;
-
 public abstract class HeadParser
 {
 
@@ -71,8 +69,4 @@ public abstract class HeadParser
             .getInt();
    }
 
-   public static IncomingMessageType getMessageType(byte[] head)
-   {
-      return IncomingMessageType.fromTypeCode(getType(head));
-   }
 }

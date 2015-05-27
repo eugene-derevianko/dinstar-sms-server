@@ -12,6 +12,11 @@ public class Flag implements ToBytes
       this.bytes = bytes;
    }
 
+   public Flag()
+   {
+      this(new byte[]{0, 0});
+   }
+
    @Override
    public byte[] toBytes()
    {

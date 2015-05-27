@@ -1,16 +1,15 @@
-package com.symulakr.dinstar.smsserver.message.sms;
+package com.symulakr.dinstar.smsserver.message.body;
 
 import static com.symulakr.dinstar.smsserver.utils.ArrayUtils.skip0x00;
 import static com.symulakr.dinstar.smsserver.utils.EnumUtils.fromByte;
 
 import java.nio.ByteBuffer;
 
-import com.symulakr.dinstar.smsserver.message.IncomingMessage;
-import com.symulakr.dinstar.smsserver.message.OutgoingMessage;
+import com.symulakr.dinstar.smsserver.common.ToBytes;
 import com.symulakr.dinstar.smsserver.message.enums.ContentType;
 import com.symulakr.dinstar.smsserver.message.enums.Encoding;
 
-public class IncomingGsmMessage extends IncomingMessage
+public class SmsMessage extends BodyFromDWG
 {
    private String number;
    private ContentType contentType;
@@ -21,13 +20,13 @@ public class IncomingGsmMessage extends IncomingMessage
    private short contentLength;
    private String content;
 
-   public IncomingGsmMessage(byte[] head)
+   public SmsMessage(ToBytes body)
    {
-      this.head = head;
+      super(body);
    }
 
    @Override
-   protected void parseBody()
+   protected void parseByteArray(byte[] body)
    {
       ByteBuffer buffer = ByteBuffer.wrap(body);
       byte[] numberBytes = new byte[24];
@@ -44,12 +43,6 @@ public class IncomingGsmMessage extends IncomingMessage
       byte[] contentBytes = new byte[contentLength];
       buffer.get(contentBytes);
       content = new String(contentBytes, encoding.getCharset());
-   }
-
-   @Override
-   public OutgoingMessage createResponse()
-   {
-      return new IncomingGsmMessageResponse(getMessageId(), true);
    }
 
    @Override

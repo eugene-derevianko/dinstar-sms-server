@@ -1,4 +1,4 @@
-package com.symulakr.dinstar.smsserver.message;
+package com.symulakr.dinstar.smsserver.message.body;
 
 import com.symulakr.dinstar.smsserver.common.ToBytes;
 

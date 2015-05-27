@@ -1,21 +1,20 @@
-package com.symulakr.dinstar.smsserver.message.service;
+package com.symulakr.dinstar.smsserver.message.body;
 
 import static com.symulakr.dinstar.smsserver.utils.ArrayUtils.skip0x00;
 
 import java.util.Arrays;
 
-import com.symulakr.dinstar.smsserver.message.IncomingMessage;
-import com.symulakr.dinstar.smsserver.message.OutgoingMessage;
+import com.symulakr.dinstar.smsserver.common.ToBytes;
 
-public class AuthenticationRequest extends IncomingMessage
+public class AuthenticationRequestBody extends BodyFromDWG
 {
 
    private String userId;
    private String password;
 
-   public AuthenticationRequest(byte[] head)
+   public AuthenticationRequestBody(ToBytes body)
    {
-      this.head = head;
+      super(body);
    }
 
    public String getUserId()
@@ -29,16 +28,10 @@ public class AuthenticationRequest extends IncomingMessage
    }
 
    @Override
-   protected void parseBody()
+   protected void parseByteArray(byte[] body)
    {
       this.userId = new String(skip0x00(Arrays.copyOfRange(body, 0, 16)));
       this.password = new String(skip0x00(Arrays.copyOfRange(body, 16, 32)));
-   }
-
-   @Override
-   public OutgoingMessage createResponse()
-   {
-      return new AuthenticationResponse(getMessageId(), true);
    }
 
    @Override

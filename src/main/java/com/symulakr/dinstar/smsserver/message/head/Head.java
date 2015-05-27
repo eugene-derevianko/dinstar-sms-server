@@ -17,7 +17,7 @@ public class Head implements ToBytes
    private byte[] bytes;
    private int lengthOfBody;
    private MessageId messageId;
-   private MsType messageType;
+   private MessageType messageType;
    private Flag flag;
 
    public Head(byte[] bytes)
@@ -26,11 +26,11 @@ public class Head implements ToBytes
       this.lengthOfBody = ByteBuffer.wrap(bytes)
             .getInt(BODY_LENGTH_INDEX);
       this.messageId = new MessageId(Arrays.copyOfRange(bytes, MESSAGE_ID_INDEX, TYPE_INDEX));
-      this.messageType = MsType.fromBytes(Arrays.copyOfRange(bytes, TYPE_INDEX, FLAG_INDEX));
+      this.messageType = MessageType.fromBytes(Arrays.copyOfRange(bytes, TYPE_INDEX, FLAG_INDEX));
       this.flag = new Flag(Arrays.copyOfRange(bytes, FLAG_INDEX, LENGTH));
    }
 
-   public Head(int lengthOfBody, MessageId messageId, MsType messageType, Flag flag)
+   public Head(int lengthOfBody, MessageId messageId, MessageType messageType, Flag flag)
    {
       this.lengthOfBody = lengthOfBody;
       this.messageId = messageId;
@@ -71,7 +71,7 @@ public class Head implements ToBytes
       return messageId;
    }
 
-   public MsType getMessageType()
+   public MessageType getMessageType()
    {
       return messageType;
    }

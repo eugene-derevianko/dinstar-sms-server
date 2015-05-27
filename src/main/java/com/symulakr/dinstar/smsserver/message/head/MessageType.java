@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 
 import com.symulakr.dinstar.smsserver.common.ToBytes;
 
-public enum MsType implements ToBytes
+public enum MessageType implements ToBytes
 {
    X00(0x00, "Keepalive message"),
    X01(0x01, "Send SMS Request"),
@@ -35,7 +35,7 @@ public enum MsType implements ToBytes
         *0x0A Response to Send USSD Request DWG  SMS Server
         *0x0B Receive USSD Message DWG  SMS Server
         *0x0C Response to Receive USSD Message SMS Server  DWG
-         
+
          0x11 Receive SMS Receipt DWG SMS Server
          0x12 Response to Receive SMS Receipt SMS Server DWG
          0x0101 Receive SIM MESSAGE API Server DWG
@@ -55,11 +55,11 @@ public enum MsType implements ToBytes
          0x010F Receive MODIFY IMEI API Server DWG
          0x0110 Response to MODIFY IMEI DWG API Server
     */
-   
+
    private short code;
    private String description;
 
-   MsType(int code, String description)
+   MessageType(int code, String description)
    {
       this.code = (short) code;
       this.description = description;
@@ -78,11 +78,11 @@ public enum MsType implements ToBytes
       return description;
    }
 
-   public static MsType fromBytes(byte[] bytes)
+   public static MessageType fromBytes(byte[] bytes)
    {
       short sh = ByteBuffer.wrap(bytes)
             .getShort();
-      for (MsType type : values())
+      for (MessageType type : values())
       {
          if (type.code == sh)
          {

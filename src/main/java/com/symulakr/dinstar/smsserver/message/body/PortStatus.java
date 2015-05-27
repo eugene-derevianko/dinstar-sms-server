@@ -1,24 +1,24 @@
-package com.symulakr.dinstar.smsserver.message.report;
+package com.symulakr.dinstar.smsserver.message.body;
 
 import static com.symulakr.dinstar.smsserver.utils.EnumUtils.fromByte;
 
-import com.symulakr.dinstar.smsserver.message.OutgoingMessage;
+import com.symulakr.dinstar.smsserver.common.ToBytes;
 import com.symulakr.dinstar.smsserver.message.enums.SimStatus;
 
-public class StatusReport extends AbstractStatusReport
+public class PortStatus extends AbstractStatusBody
 {
 
    private SimStatus[] statuses;
 
-   public StatusReport(byte[] head)
+   public PortStatus(ToBytes body)
    {
-      this.head = head;
+      super(body);
    }
 
    @Override
-   protected void parseBody()
+   protected void parseByteArray(byte[] body)
    {
-      super.parseBody();
+      super.parseByteArray(body);
       this.statuses = new SimStatus[this.portCount];
       for (int i = 0; i < portCount; i++)
       {
@@ -26,14 +26,9 @@ public class StatusReport extends AbstractStatusReport
       }
    }
 
-   @Override
-   public OutgoingMessage createResponse()
-   {
-      return new StatusResponse(getMessageId(), true);
-   }
-
    public SimStatus[] getStatuses()
    {
       return statuses;
    }
+
 }

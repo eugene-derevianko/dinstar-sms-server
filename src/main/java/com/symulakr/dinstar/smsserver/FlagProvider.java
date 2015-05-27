@@ -9,7 +9,7 @@ public class FlagProvider
 
    public Flag provideFlag()
    {
-      return new Flag(new byte[]{0,0});
+      return new Flag();
    }
 
 }

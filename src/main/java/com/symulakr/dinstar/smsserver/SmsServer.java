@@ -1,7 +1,6 @@
 package com.symulakr.dinstar.smsserver;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import javax.annotation.PostConstruct;
@@ -13,11 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.symulakr.dinstar.smsserver.message.Body;
-import com.symulakr.dinstar.smsserver.message.IncomingMessage;
+import com.symulakr.dinstar.smsserver.handlers.Handler;
 import com.symulakr.dinstar.smsserver.message.Message;
-import com.symulakr.dinstar.smsserver.message.MessageFactory;
-import com.symulakr.dinstar.smsserver.message.OutgoingMessage;
+import com.symulakr.dinstar.smsserver.message.body.Body;
 import com.symulakr.dinstar.smsserver.message.head.Head;
 import com.symulakr.dinstar.smsserver.utils.HeadParser;
 
@@ -28,7 +25,9 @@ public class SmsServer extends Thread
    @Autowired
    private ConnectionSocket connectionSocket;
    @Autowired
-   private IncomingQueue incomingQueue;
+   private HandlerFactory handlerFactory;
+   @Autowired
+   private OutgoingQueue outgoingQueue;
 
    private final static Logger LOG = LogManager.getLogger(SmsServer.class);
 
@@ -42,33 +41,19 @@ public class SmsServer extends Thread
    {
       try
       {
-         MessageFactory messageFactory = new MessageFactory();
          BufferedInputStream stream = new BufferedInputStream(connectionSocket.getInputStream());
          byte[] bytes = new byte[HeadParser.HEAD_LENGTH];
-
          while (started)
          {
             if (stream.read(bytes) == HeadParser.HEAD_LENGTH)
             {
                Head head = new Head(bytes);
-
-               IncomingMessage message = messageFactory.createMessage(bytes);
                byte[] body = new byte[head.getLengthOfBody()];
                if (stream.read(body) == head.getLengthOfBody())
                {
-                  message.setBody(body);
-                  incomingQueue.offer(new Message(head, new Body(body)));
-               }
-
-               LOG.info(incomingQueue.size());
-
-               OutgoingMessage outgoingMessage = message.createResponse();
-               if (outgoingMessage != null)
-               {
-                  LOG.info(outgoingMessage);
-                  ByteArrayOutputStream outToClient = new ByteArrayOutputStream();
-                  outToClient.write(outgoingMessage.toBytes());
-                  outToClient.writeTo(connectionSocket.getOutputStream());
+                  Message message = new Message(head, new Body(body));
+                  Handler handler = handlerFactory.getHandler(head.getMessageType());
+                  outgoingQueue.push(handler.processMessage(message));
                }
             }
          }
@@ -77,7 +62,6 @@ public class SmsServer extends Thread
       {
          LOG.error(ex);
       }
-
    }
 
    @PreDestroy
