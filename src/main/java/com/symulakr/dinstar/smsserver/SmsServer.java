@@ -1,27 +1,33 @@
 package com.symulakr.dinstar.smsserver;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.symulakr.dinstar.smsserver.message.IncomingMessage;
-import com.symulakr.dinstar.smsserver.message.MessageFactory;
-import com.symulakr.dinstar.smsserver.message.OutgoingMessage;
+import com.symulakr.dinstar.smsserver.handlers.Handler;
+import com.symulakr.dinstar.smsserver.message.Message;
+import com.symulakr.dinstar.smsserver.message.body.Body;
+import com.symulakr.dinstar.smsserver.message.head.Head;
 import com.symulakr.dinstar.smsserver.utils.HeadParser;
 
 @Component
 public class SmsServer extends Thread
 {
+
+   @Autowired
+   private ConnectionSocket connectionSocket;
+   @Autowired
+   private HandlerFactory handlerFactory;
+   @Autowired
+   private OutgoingQueue outgoingQueue;
 
    private final static Logger LOG = LogManager.getLogger(SmsServer.class);
 
@@ -35,43 +41,31 @@ public class SmsServer extends Thread
    {
       try
       {
-         ServerSocket welcomeSocket = new ServerSocket(port);
-         Socket connectionSocket = welcomeSocket.accept();
-         MessageFactory messageFactory = new MessageFactory();
-         LOG.info("Accept");
          BufferedInputStream stream = new BufferedInputStream(connectionSocket.getInputStream());
-         byte[] head = new byte[HeadParser.HEAD_LENGTH];
-
+         byte[] bytes = new byte[HeadParser.HEAD_LENGTH];
          while (started)
          {
-            if (stream.read(head) == HeadParser.HEAD_LENGTH)
+            if (stream.read(bytes) == HeadParser.HEAD_LENGTH)
             {
-               IncomingMessage message = messageFactory.createMessage(head);
-               byte[] body = new byte[message.getLength()];
-               if (stream.read(body) == message.getLength())
+               Head head = new Head(bytes);
+               byte[] body = new byte[head.getLengthOfBody()];
+               if (stream.read(body) == head.getLengthOfBody())
                {
-                  message.setBody(body);
-               }
-
-               LOG.info(message);
-
-               OutgoingMessage outgoingMessage = message.createResponse();
-               if (outgoingMessage != null)
-               {
-                  LOG.info(outgoingMessage);
-                  ByteArrayOutputStream outToClient = new ByteArrayOutputStream();
-                  outToClient.write(outgoingMessage.toBytes());
-                  outToClient.writeTo(connectionSocket.getOutputStream());
+                  Message message = new Message(head, new Body(body));
+                  Handler handler = handlerFactory.getHandler(head.getMessageType());
+                  Message outgoingMessage = handler.processMessage(message);
+                  if (outgoingMessage != null)
+                  {
+                     outgoingQueue.push(outgoingMessage);
+                  }
                }
             }
          }
-         connectionSocket.close();
       }
       catch (IOException ex)
       {
          LOG.error(ex);
       }
-
    }
 
    @PreDestroy
