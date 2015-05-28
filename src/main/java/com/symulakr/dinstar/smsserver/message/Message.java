@@ -1,6 +1,7 @@
 package com.symulakr.dinstar.smsserver.message;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 import com.symulakr.dinstar.smsserver.common.ToBytes;
 import com.symulakr.dinstar.smsserver.message.head.Head;
@@ -34,5 +35,14 @@ public class Message implements ToBytes
             .put(head.toBytes())
             .put(body.toBytes())
             .array();
+   }
+
+   @Override
+   public String toString()
+   {
+      return "Message{" +
+            "head=" + head +
+            ", body=" + Arrays.toString(body.toBytes()) +
+            '}';
    }
 }

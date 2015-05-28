@@ -53,7 +53,11 @@ public class SmsServer extends Thread
                {
                   Message message = new Message(head, new Body(body));
                   Handler handler = handlerFactory.getHandler(head.getMessageType());
-                  outgoingQueue.push(handler.processMessage(message));
+                  Message outgoingMessage = handler.processMessage(message);
+                  if (outgoingMessage != null)
+                  {
+                     outgoingQueue.push(outgoingMessage);
+                  }
                }
             }
          }

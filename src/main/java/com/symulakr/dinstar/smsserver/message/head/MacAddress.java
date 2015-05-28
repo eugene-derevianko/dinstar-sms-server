@@ -50,7 +50,7 @@ public class MacAddress implements ToBytes
    private void convertToBytes()
    {
       String[] splittedMacAddress = macAddress.split("[-:]", 6);
-      ByteBuffer byteBuffer = ByteBuffer.allocate(6);
+      ByteBuffer byteBuffer = ByteBuffer.allocate(8);
       for (String part : splittedMacAddress)
       {
          byteBuffer.put(Byte.parseByte(part, 16));

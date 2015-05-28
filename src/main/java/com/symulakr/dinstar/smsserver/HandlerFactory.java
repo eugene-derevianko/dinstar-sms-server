@@ -1,5 +1,7 @@
 package com.symulakr.dinstar.smsserver;
 
+import com.symulakr.dinstar.smsserver.handlers.NullResponseHandler;
+import com.symulakr.dinstar.smsserver.handlers.SendSmsResultHandler;
 import com.symulakr.dinstar.smsserver.handlers.SmsMessageHandler;
 import com.symulakr.dinstar.smsserver.handlers.UssdMessageHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +17,8 @@ import com.symulakr.dinstar.smsserver.message.head.MessageType;
 @Component
 public class HandlerFactory
 {
-
+   @Autowired
+   private SendSmsResultHandler sendSmsResultHandler;
    @Autowired
    private PortStatusHandler portStatusHandler;
    @Autowired
@@ -26,6 +29,8 @@ public class HandlerFactory
    private SmsMessageHandler smsMessageHandler;
    @Autowired
    private UssdMessageHandler ussdMessageHandler;
+   @Autowired
+   private NullResponseHandler nullResponseHandler;
    @Autowired
    private EmptyResponseHandler emptyResponseHandler;
 
@@ -38,9 +43,9 @@ public class HandlerFactory
          case X01:
             break;
          case X02:
-            break;
+            return nullResponseHandler;
          case X03:
-            break;
+            return sendSmsResultHandler;
          case X04:
             break;
          case X05:
