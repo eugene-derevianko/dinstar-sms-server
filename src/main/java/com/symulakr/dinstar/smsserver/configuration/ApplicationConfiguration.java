@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.symulakr.dinstar.smsserver.OutgoingQueue;
-
 @Configuration
 public class ApplicationConfiguration
 {
@@ -21,12 +19,6 @@ public class ApplicationConfiguration
    public Socket socket() throws IOException
    {
       return new ServerSocket(port).accept();
-   }
-
-   @Bean
-   public OutgoingQueue incomingQueue()
-   {
-      return new OutgoingQueue();
    }
 
 }

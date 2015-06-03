@@ -27,7 +27,7 @@ public class SmsServer extends Thread
    @Autowired
    private HandlerFactory handlerFactory;
    @Autowired
-   private OutgoingQueue outgoingQueue;
+   private MessageSender messageSender;
 
    private final static Logger LOG = LogManager.getLogger(SmsServer.class);
 
@@ -56,7 +56,7 @@ public class SmsServer extends Thread
                   Message outgoingMessage = handler.processMessage(message);
                   if (outgoingMessage != null)
                   {
-                     outgoingQueue.push(outgoingMessage);
+                     messageSender.sendMessage(outgoingMessage);
                   }
                }
             }

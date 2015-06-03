@@ -1,7 +1,5 @@
 package com.symulakr.dinstar.smsserver.message.enums;
 
-import com.symulakr.dinstar.smsserver.message.enums.AsByte;
-
 public enum UssdType implements AsByte
 {
 

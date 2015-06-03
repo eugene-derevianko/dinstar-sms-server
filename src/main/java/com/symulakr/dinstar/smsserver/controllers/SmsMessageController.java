@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.symulakr.dinstar.smsserver.HeadProvider;
-import com.symulakr.dinstar.smsserver.OutgoingQueue;
+import com.symulakr.dinstar.smsserver.MessageSender;
 import com.symulakr.dinstar.smsserver.message.Message;
 import com.symulakr.dinstar.smsserver.message.body.OutSmsMessage;
 import com.symulakr.dinstar.smsserver.message.head.Head;
@@ -24,7 +24,7 @@ public class SmsMessageController
    private HeadProvider headProvider;
 
    @Autowired
-   private OutgoingQueue outgoingQueue;
+   private MessageSender messageSender;
 
    @RequestMapping("/sms/{number}/{message}")
    public String sendSmsMessage(@PathVariable("number") String number, @PathVariable("message") String message)
@@ -33,7 +33,7 @@ public class SmsMessageController
       OutSmsMessage outSmsMessage = new OutSmsMessage(number, message);
       Head head = headProvider.provideHeader(outSmsMessage.bodyLength(), MessageType.X01);
       Message sms = new Message(head, outSmsMessage);
-      outgoingQueue.push(sms);
+      messageSender.sendMessage(sms);
 
       return "Ok";
    }
