@@ -9,7 +9,8 @@ public enum Encoding implements AsByte
 {
 
    GSM_7BIT(0, new Gsm7BitCharsetProvider().charsetForName("X-Gsm7Bit")),
-   UNICODE(1, StandardCharsets.UTF_16);
+   UNICODE(1, StandardCharsets.UTF_16),
+   ASCII(-1, StandardCharsets.US_ASCII);
 
    private final int code;
    private final Charset charset;
