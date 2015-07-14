@@ -52,6 +52,7 @@ public class SmsServer extends Thread
                if (stream.read(body) == head.getLengthOfBody())
                {
                   Message message = new Message(head, new Body(body));
+                  LOG.info("Receive Message: {}", message);
                   Handler handler = handlerFactory.getHandler(head.getMessageType());
                   Message outgoingMessage = handler.processMessage(message);
                   if (outgoingMessage != null)
