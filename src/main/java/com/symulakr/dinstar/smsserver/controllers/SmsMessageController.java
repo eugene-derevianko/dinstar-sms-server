@@ -14,7 +14,7 @@ import com.symulakr.dinstar.smsserver.message.body.OutSmsMessage;
 import com.symulakr.dinstar.smsserver.message.head.Head;
 import com.symulakr.dinstar.smsserver.message.head.MessageType;
 
-@RestController
+//@RestController
 public class SmsMessageController
 {
 

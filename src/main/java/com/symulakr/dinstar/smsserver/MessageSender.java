@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.symulakr.dinstar.smsserver.message.Message;
 
-@Component
+//@Component
 public class MessageSender
 {
 

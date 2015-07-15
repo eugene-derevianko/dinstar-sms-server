@@ -11,7 +11,7 @@ import com.symulakr.dinstar.smsserver.message.Message;
 import com.symulakr.dinstar.smsserver.message.body.SmsMessage;
 import com.symulakr.dinstar.smsserver.message.head.MessageType;
 
-@Component
+//@Component
 public class SmsMessageHandler extends SimpleResponseHandler
 {
 

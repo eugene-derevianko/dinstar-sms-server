@@ -25,7 +25,7 @@ public class HandlerFactory
    private CsqRssiHandler csqRssiHandler;
    @Autowired
    private AuthenticationHandler authenticationHandler;
-   @Autowired
+//   @Autowired
    private SmsMessageHandler smsMessageHandler;
    @Autowired
    private UssdMessageHandler ussdMessageHandler;
