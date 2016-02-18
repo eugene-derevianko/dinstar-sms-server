@@ -1,8 +1,9 @@
 package com.symulakr.dinstar.smsserver.configuration;
 
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.InetSocketAddress;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -16,9 +17,12 @@ public class ApplicationConfiguration
    private int port;
 
    @Bean
-   public Socket socket() throws IOException
+   public SocketChannel socket() throws IOException
    {
-      return new ServerSocket(port).accept();
+      ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
+      serverSocketChannel.socket()
+            .bind(new InetSocketAddress(port));
+      return serverSocketChannel.accept();
    }
 
 }

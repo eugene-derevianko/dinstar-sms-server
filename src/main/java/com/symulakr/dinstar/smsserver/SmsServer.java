@@ -1,7 +1,8 @@
 package com.symulakr.dinstar.smsserver;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -23,11 +24,9 @@ public class SmsServer extends Thread
 {
 
    @Autowired
-   private ConnectionSocket connectionSocket;
-   @Autowired
    private HandlerFactory handlerFactory;
    @Autowired
-   private MessageSender messageSender;
+   private SocketChannel socketChannel;
 
    private final static Logger LOG = LogManager.getLogger(SmsServer.class);
 
@@ -41,22 +40,21 @@ public class SmsServer extends Thread
    {
       try
       {
-         BufferedInputStream stream = new BufferedInputStream(connectionSocket.getInputStream());
-         byte[] bytes = new byte[HeadParser.HEAD_LENGTH];
+         ByteBuffer byteBuffer = ByteBuffer.allocate(HeadParser.HEAD_LENGTH);
          while (started)
          {
-            if (stream.read(bytes) == HeadParser.HEAD_LENGTH)
+            if (socketChannel.read(byteBuffer) == HeadParser.HEAD_LENGTH)
             {
-               Head head = new Head(bytes);
-               byte[] body = new byte[head.getLengthOfBody()];
-               if (stream.read(body) == head.getLengthOfBody())
+               Head head = new Head(byteBuffer.array());
+               byteBuffer = ByteBuffer.allocate(head.getLengthOfBody());
+               if (socketChannel.read(byteBuffer) == head.getLengthOfBody())
                {
-                  Message message = new Message(head, new Body(body));
+                  Message message = new Message(head, new Body(byteBuffer.array()));
                   Handler handler = handlerFactory.getHandler(head.getMessageType());
                   Message outgoingMessage = handler.processMessage(message);
                   if (outgoingMessage != null)
                   {
-                     messageSender.sendMessage(outgoingMessage);
+                     socketChannel.write(ByteBuffer.wrap(outgoingMessage.toBytes()));
                   }
                }
             }
@@ -71,6 +69,7 @@ public class SmsServer extends Thread
    @PreDestroy
    public void onStop() throws IOException
    {
+      socketChannel.close();
       started = false;
       LOG.info("PreDestroy");
    }

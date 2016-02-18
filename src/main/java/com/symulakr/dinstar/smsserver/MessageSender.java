@@ -1,7 +1,8 @@
 package com.symulakr.dinstar.smsserver;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,7 +16,7 @@ public class MessageSender
 {
 
    @Autowired
-   private ConnectionSocket connectionSocket;
+   private SocketChannel socketChannel;
 
    private final static Logger LOG = LogManager.getLogger(MessageSender.class);
 
@@ -24,9 +25,7 @@ public class MessageSender
       LOG.info("Send message\n{}", message);
       try
       {
-         ByteArrayOutputStream outToClient = new ByteArrayOutputStream();
-         outToClient.write(message.toBytes());
-         outToClient.writeTo(connectionSocket.getOutputStream());
+         socketChannel.write(ByteBuffer.wrap(message.toBytes()));
       }
       catch (IOException ex)
       {
