@@ -38,39 +38,39 @@ public class HandlerFactory
    {
       switch (messageType)
       {
-         case X00:
+         case KEEPALIVE_MESSAGE:
             break;
-         case X01:
+         case SEND_SMS_REQUEST:
             break;
-         case X02:
+         case RESPONSE_TO_SEND_SMS_REQUEST:
             return nullResponseHandler;
-         case X03:
+         case SEND_SMS_RESULT:
             return sendSmsResultHandler;
-         case X04:
+         case RESPONSE_TO_SEND_SMS_RESULT:
             break;
-         case X05:
+         case RECEIVE_SMS_MESSAGE:
             return smsMessageHandler;
-         case X06:
+         case RESPONSE_TO_RECEIVE_SMS_MESSAGE:
             break;
-         case X07:
+         case STATUS_REPORT:
             return portStatusHandler;
-         case X08:
+         case RESPONSE_TO_STATUS_REPORT:
             break;
-         case X09:
+         case SEND_USSD_REQUEST:
             break;
-         case X0A:
+         case RESPONSE_TO_SEND_USSD_REQUEST:
             break;
-         case X0B:
+         case RECEIVE_USSD_MESSAGE:
             return ussdMessageHandler;
-         case X0C:
+         case RESPONSE_TO_RECEIVE_USSD_MESSAGE:
             break;
-         case X0D:
+         case SEND_CSQ_RSSI:
             return csqRssiHandler;
-         case X0E:
+         case RESPONSE_TO_SEND_CSQ_RSSI:
             break;
-         case X0F:
+         case SEND_AUTHENTICATION:
             return authenticationHandler;
-         case X10:
+         case RESPONSE_TO_SEND_AUTHENTICATION:
             break;
          case X0111:
             break;

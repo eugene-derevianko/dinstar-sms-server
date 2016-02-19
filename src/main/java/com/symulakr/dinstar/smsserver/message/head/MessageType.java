@@ -6,55 +6,30 @@ import com.symulakr.dinstar.smsserver.common.ToBytes;
 
 public enum MessageType implements ToBytes
 {
-   X00(0x00, "Keepalive message"),
-   X01(0x01, "Send SMS Request"),
-   X02(0x02, "Response to Send SMS Request"),
-   X03(0x03, "Send SMS Result"),
-   X04(0x04, "Response to Send SMS Result"),
-   X05(0x05, "Receive SMS Message"),
-   X06(0x06, "Response to Receive SMS Message"),
-   X07(0x07, "Status Report"),
-   X08(0x08, "Status Response"),
-   X09(0x09, "Send USSD Request"),
-   X0A(0x0A, "Response to Send USSD Request"),
-   X0B(0x0B, "Receive USSD Message"),
-   X0C(0x0C, "Response to Receive USSD Message"),
-   X0D(0x0D, "Send Csq Rssi"),
-   X0E(0x0E, "Response to Send Csq Rssi"),
-   X0F(0x0F, "Send userID and Password Authentication"),
-   X10(0x10, "Response to Send userID and Password Authentication"),
+
+   KEEPALIVE_MESSAGE(0x0000, "Keepalive message"),
+   SEND_SMS_REQUEST(0x0001, "Send SMS Request"),
+   RESPONSE_TO_SEND_SMS_REQUEST(0x0002, "Response to Send SMS Request"),
+   SEND_SMS_RESULT(0x0003, "Send SMS Result"),
+   RESPONSE_TO_SEND_SMS_RESULT(0x0004, "Response to Send SMS Result"),
+   RECEIVE_SMS_MESSAGE(0x0005, "Receive SMS Message"),
+   RESPONSE_TO_RECEIVE_SMS_MESSAGE(0x0006, "Response to Receive SMS Message"),
+   STATUS_REPORT(0x0007, "Status Report"),
+   RESPONSE_TO_STATUS_REPORT(0x0008, "Status Response"),
+   SEND_USSD_REQUEST(0x0009, "Send USSD Request"),
+   RESPONSE_TO_SEND_USSD_REQUEST(0x0A, "Response to Send USSD Request"),
+   RECEIVE_USSD_MESSAGE(0x000B, "Receive USSD Message"),
+   RESPONSE_TO_RECEIVE_USSD_MESSAGE(0x000C, "Response to Receive USSD Message"),
+   SEND_CSQ_RSSI(0x000D, "Send Csq Rssi"),
+   RESPONSE_TO_SEND_CSQ_RSSI(0x000E, "Response to Send Csq Rssi"),
+   SEND_AUTHENTICATION(0x000F, "Send userID and Password Authentication"),
+   RESPONSE_TO_SEND_AUTHENTICATION(0x0010, "Response to Send userID and Password Authentication"),
+   RECEIVE_SMS_RECEIPT(0x0011, "Receive SMS Receipt"),
+   RESPONSE_TO_RECEIVE_SMS_RECEIPT(0x0012, "Response to Receive SMS Receipt"),
    // ...
    X0111(0x0111, "Receive PORT AND SLOT COUNT"),
    X0112(0x0112, "Send PORT AND SLOT COUNT"),
    DEFAULT(Short.MIN_VALUE, "Unknown message type");
-
-      /*
-        *0x03 Send SMS Result DWG SMS Server
-        *0x04 Response to Send SMS Result SMS Server DWG
-        *0x09 Send USSD Request SMS Server  DWG
-        *0x0A Response to Send USSD Request DWG  SMS Server
-        *0x0B Receive USSD Message DWG  SMS Server
-        *0x0C Response to Receive USSD Message SMS Server  DWG
-
-         0x11 Receive SMS Receipt DWG SMS Server
-         0x12 Response to Receive SMS Receipt SMS Server DWG
-         0x0101 Receive SIM MESSAGE API Server DWG
-         0x0102 Send SIM MESSAGE DWG API Server
-         0x0103 Receive Unbind Port API Server DWG
-         0x0104 Response to Unbind Port DWG API Server
-         0x0105 Receive SWITCH SIMCARD API Server DWG
-         0x0106 Response to SWITCH SIMCARD DWG API Server
-         0x0107 Receive RESET MODULE API Server DWG
-         0x0108 Response to RESET MODULE DWG API Server
-         0x0109 Receive RESTART SIMBOX API Server DWG
-         0x010A Response to RESTART SIMBOX DWG API Server
-         0x010B Receive SIMBOX MESSAGE API Server DWG
-         0x010C Send SIMBOX MESSAGE DWG API Server
-         0x010D Receive Obtain IMEI API Server DWG
-         0x010E Response to Obtain IMEI DWG API Server
-         0x010F Receive MODIFY IMEI API Server DWG
-         0x0110 Response to MODIFY IMEI DWG API Server
-    */
 
    private short code;
    private String description;
@@ -78,17 +53,21 @@ public enum MessageType implements ToBytes
       return description;
    }
 
-   public static MessageType fromBytes(byte[] bytes)
+   public static MessageType decode(short code)
    {
-      short sh = ByteBuffer.wrap(bytes)
-            .getShort();
       for (MessageType type : values())
       {
-         if (type.code == sh)
+         if (type.code == code)
          {
             return type;
          }
       }
       return DEFAULT;
+   }
+
+   public static MessageType fromBytes(byte[] bytes)
+   {
+      return decode(ByteBuffer.wrap(bytes)
+            .getShort());
    }
 }

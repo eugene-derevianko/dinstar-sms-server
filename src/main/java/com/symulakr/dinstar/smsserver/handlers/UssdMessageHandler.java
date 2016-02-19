@@ -16,7 +16,7 @@ public class UssdMessageHandler extends SimpleResponseHandler
 
    public MessageType getResponseMessageType()
    {
-      return MessageType.X0C;
+      return MessageType.RESPONSE_TO_RECEIVE_USSD_MESSAGE;
    }
 
    @Override

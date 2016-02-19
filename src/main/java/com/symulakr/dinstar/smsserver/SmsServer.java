@@ -2,6 +2,7 @@ package com.symulakr.dinstar.smsserver;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 
 import javax.annotation.PostConstruct;
@@ -26,7 +27,7 @@ public class SmsServer extends Thread
    @Autowired
    private HandlerFactory handlerFactory;
    @Autowired
-   private SocketChannel socketChannel;
+   private ServerSocketChannel serverSocketChannel;
 
    private final static Logger LOG = LogManager.getLogger(SmsServer.class);
 
@@ -38,7 +39,7 @@ public class SmsServer extends Thread
    @Override
    public void run()
    {
-      try
+      try(SocketChannel socketChannel = serverSocketChannel.accept())
       {
          ByteBuffer byteBuffer = ByteBuffer.allocate(HeadParser.HEAD_LENGTH);
          while (started)
@@ -69,7 +70,6 @@ public class SmsServer extends Thread
    @PreDestroy
    public void onStop() throws IOException
    {
-      socketChannel.close();
       started = false;
       LOG.info("PreDestroy");
    }
@@ -77,6 +77,7 @@ public class SmsServer extends Thread
    @PostConstruct
    public void onStart()
    {
+      LOG.info("PostConstruct");
       started = true;
       start();
    }

@@ -12,7 +12,7 @@ public class CsqRssiHandler extends SimpleResponseHandler
 
    public MessageType getResponseMessageType()
    {
-      return MessageType.X0E;
+      return MessageType.RESPONSE_TO_SEND_CSQ_RSSI;
    }
 
    @Override

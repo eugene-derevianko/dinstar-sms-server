@@ -12,7 +12,7 @@ public class PortStatusHandler extends SimpleResponseHandler
 
    public MessageType getResponseMessageType()
    {
-      return MessageType.X08;
+      return MessageType.RESPONSE_TO_STATUS_REPORT;
    }
 
    @Override

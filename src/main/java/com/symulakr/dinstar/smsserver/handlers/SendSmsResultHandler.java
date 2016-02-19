@@ -16,7 +16,7 @@ public class SendSmsResultHandler extends SimpleResponseHandler
 
    public MessageType getResponseMessageType()
    {
-      return MessageType.X06;
+      return MessageType.RESPONSE_TO_RECEIVE_SMS_MESSAGE;
    }
 
    @Override

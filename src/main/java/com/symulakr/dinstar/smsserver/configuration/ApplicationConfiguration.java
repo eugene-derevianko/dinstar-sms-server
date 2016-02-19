@@ -8,6 +8,7 @@ import java.nio.channels.SocketChannel;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 
 @Configuration
 public class ApplicationConfiguration
@@ -17,12 +18,13 @@ public class ApplicationConfiguration
    private int port;
 
    @Bean
-   public SocketChannel socket() throws IOException
+   @Scope
+   public ServerSocketChannel socket() throws IOException
    {
       ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
       serverSocketChannel.socket()
             .bind(new InetSocketAddress(port));
-      return serverSocketChannel.accept();
+      return serverSocketChannel;
    }
 
 }

@@ -9,7 +9,7 @@ import com.symulakr.dinstar.smsserver.common.ToBytes;
 import com.symulakr.dinstar.smsserver.message.enums.ContentType;
 import com.symulakr.dinstar.smsserver.message.enums.Encoding;
 
-public class SmsMessage extends BodyFromDWG
+public class ReceiveSms extends BodyFromDWG
 {
    private String number;
    private ContentType contentType;
@@ -20,7 +20,7 @@ public class SmsMessage extends BodyFromDWG
    private short contentLength;
    private String content;
 
-   public SmsMessage(ToBytes body)
+   public ReceiveSms(ToBytes body)
    {
       super(body);
    }

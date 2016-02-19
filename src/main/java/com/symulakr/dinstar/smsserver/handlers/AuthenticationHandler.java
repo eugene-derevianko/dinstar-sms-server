@@ -12,7 +12,7 @@ public class AuthenticationHandler extends SimpleResponseHandler
 
    public MessageType getResponseMessageType()
    {
-      return MessageType.X10;
+      return MessageType.RESPONSE_TO_SEND_AUTHENTICATION;
    }
 
    @Override

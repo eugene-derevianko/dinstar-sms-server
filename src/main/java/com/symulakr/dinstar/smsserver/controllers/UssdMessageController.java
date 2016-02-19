@@ -31,7 +31,7 @@ public class UssdMessageController
    {
       LOG.info("USSD request with content: {}", content);
       UssdRequest ussdRequest = new UssdRequest(content);
-      Head head = headProvider.provideHeader(ussdRequest.bodyLength(), MessageType.X09);
+      Head head = headProvider.provideHeader(ussdRequest.bodyLength(), MessageType.SEND_USSD_REQUEST);
       Message message = new Message(head, ussdRequest);
       messageSender.sendMessage(message);
       return "Ussd sent";
